@@ -5,6 +5,8 @@
       @click="onClick">
       <v-layer>
         <v-rect :config="rectConfig" />
+        <v-rect v-if="boundaryRectConfig" :config="boundaryRectConfig" />
+        <v-text :config="textConfig" v-if="!points.length"/>
       </v-layer>
       <v-layer>
         <v-circle v-for="(circle, index) in circles" :key="index" :config="circle" />
@@ -18,9 +20,17 @@ import { calculatePosition } from '../libs/helper'
 export default {
   name: "DrawCanvas",
   props: {
-    'isLockAngle': {
+    isLockAngle: {
       type: Boolean,
       default: false
+    },
+    isSimpleMode: {
+      type: Boolean,
+      default: false
+    },
+    boundary: {
+      type: Object,
+      default: null
     }
   },
   data: () => ({
@@ -46,6 +56,27 @@ export default {
         strokeWidth: 4
       }
     },
+    textConfig () {
+      return {
+        x: this.width / 2 - 150,
+        y: this.height / 2 - 20,
+        text: 'Click to start drawing',
+        fontSize: 30,
+        fill: 'gray'
+      }
+    },
+    boundaryRectConfig() {
+      if (!this.boundary) { return null }
+      return {
+        x: this.boundary.minX,
+        y: this.boundary.minY,
+        width: this.boundary.maxX - this.boundary.minX,
+        height: this.boundary.maxY - this.boundary.minY,
+        stroke: '#939393',
+        strokeWidth: 2,
+        dash: [33, 10]
+      }
+    },
     lineConfig () {
       let coordinates = this.points.reduce((a, c) => {
         a = a.concat([c.x, c.y])
@@ -69,6 +100,15 @@ export default {
       }))
     }
   },
+  watch: {
+    boundary: {
+      handler () {
+        this.points = []
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   mounted() {
     window.addEventListener('resize', this.setSize)
   },
@@ -82,21 +122,29 @@ export default {
     onMouseMove (event) {
       let newPoint = { x: event.evt.offsetX, y: event.evt.offsetY }
       if (this.isLockAngle && this.points.length) {
-        newPoint = calculatePosition (newPoint, this.points[this.points.length - 1])
+        newPoint = calculatePosition (newPoint, this.points[this.points.length - 1], {
+          boundary: this.boundary,
+          isSimple: this.isSimpleMode
+        })
       }
       this.ghostPoint = newPoint
     },
     onClick () {
-      if (this.ghostPoint) {
-        this.points = this.points.concat([this.ghostPoint])
-      }
+      this.$nextTick(() => {
+        if (this.ghostPoint) {
+          this.points = this.points.concat([this.ghostPoint])
+        }
+      })
     },
     setSize () {
       if (this.$el) {
         this.width = this.$el.clientWidth
       }
+    },
+    reset () {
+      this.points = []
+      this.ghostPoint = null
     }
-
   }
 }
 </script>
