@@ -11,21 +11,13 @@
         <v-line :config="lineConfig"/>
       </v-layer>
    </v-stage>
-  </div>
+ </div>
 </template>
 <script>
 import { calculatePosition } from '../libs/helper'
 export default {
   name: "DrawCanvas",
   props: {
-    'width': {
-      type: Number,
-      default: 800
-    },
-    'height': {
-      type: Number,
-      default: 600
-    },
     'isLockAngle': {
       type: Boolean,
       default: false
@@ -33,7 +25,9 @@ export default {
   },
   data: () => ({
     points: [],
-    ghostPoint: null
+    ghostPoint: null,
+    width: 0,
+    height: 600
   }),
   computed: {
     configKonva () {
@@ -75,6 +69,15 @@ export default {
       }))
     }
   },
+  mounted() {
+    window.addEventListener('resize', this.setSize)
+  },
+  created() {
+    this.$nextTick(() => {
+      this.setSize()
+    })
+    window.removeEventListener('resize', this.setSize)
+  },
   methods: {
     onMouseMove (event) {
       let newPoint = { x: event.evt.offsetX, y: event.evt.offsetY }
@@ -87,7 +90,13 @@ export default {
       if (this.ghostPoint) {
         this.points = this.points.concat([this.ghostPoint])
       }
+    },
+    setSize () {
+      if (this.$el) {
+        this.width = this.$el.clientWidth
+      }
     }
+
   }
 }
 </script>
