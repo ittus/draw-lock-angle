@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <draw-canvas />
+    <draw-canvas :isLockAngle="isLockAngle" />
   </div>
 </template>
 
@@ -11,6 +11,29 @@ export default {
   name: 'app',
   components: {
     DrawCanvas
+  },
+  data: () => ({
+    isLockAngle: false
+  }),
+  mounted() {
+    document.addEventListener('keydown', this.handleDocumentKeyDown)
+    document.addEventListener('keyup', this.handleDocumentKeyUp)
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleDocumentKeyDown)
+    document.removeEventListener('keyup', this.handleDocumentKeyUp)
+  },
+  methods: {
+    handleDocumentKeyDown(e) {
+      if (e.keyCode === 16) {
+        this.isLockAngle = true
+      }
+    },
+    handleDocumentKeyUp (e) {
+      if (e.keyCode === 16) {
+        this.isLockAngle = false
+      }
+    }
   }
 }
 </script>
