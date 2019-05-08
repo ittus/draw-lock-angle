@@ -50,3 +50,6 @@ yarn run test
 ```
 yarn run lint
 ```
+
+## Support
+<a href="https://www.buymeacoffee.com/8buMYCOog" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;"></a>

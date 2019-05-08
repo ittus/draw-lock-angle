@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <fork-github githubUrl="https://github.com/ittus/draw-lock-angle"/>
     <h2>Demo lock angle</h2>
     <p>Hold SHIFT to lock angle 45, 90, 135, 180... degree when drawing canvas</p>
     <div class="container">
@@ -43,11 +44,13 @@
 
 <script>
 import DrawCanvas from './components/DrawCanvas.vue'
+import ForkGithub from './components/ForkGithub.vue'
 
 export default {
   name: 'app',
   components: {
-    DrawCanvas
+    DrawCanvas,
+    ForkGithub
   },
   data: () => ({
     isLockAngle: false,
