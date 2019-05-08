@@ -1,7 +1,7 @@
 {
   "name": "draw-lock-angle",
   "author": "Vu Minh Thang",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Lock 45, 90, 135, 180... degree when drawing line on Javascript canvas",
   "private": false,
   "license": "MIT",
@@ -30,9 +30,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
-    "jquery": "^3.3.1",
     "konva": "^2.6.0",
-    "popper.js": "^1.14.7",
     "vue": "^2.6.6",
     "vue-konva": "^2.0.2"
   },
